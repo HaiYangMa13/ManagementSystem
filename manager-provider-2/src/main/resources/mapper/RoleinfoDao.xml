@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.springcloudt1.managerprovider.dao.RoleinfoDao">
+  <resultMap id="BaseResultMap" type="Roleinfo">
+    <id column="roleinfo_id" jdbcType="INTEGER" property="id" />
+    <result column="roleinfo_name" jdbcType="VARCHAR" property="name" />
+    <result column="roleinfo_beizhu" jdbcType="VARCHAR" property="beizhu" />
+    <collection property="rights" ofType="Right" select="loadRights" column="roleinfo_id"></collection>
+  </resultMap>
+  <sql id="Base_Column_List">
+    roleinfo.id as roleinfo_id, roleinfo.`name` as `roleinfo_name`, roleinfo.beizhu as roleinfo_beizhu
+  </sql>
+  <select id="loadRights" resultType="Right">
+    select * from `right` where `right`.id=ANY(select `privileges`.right_id from `privileges` WHERE `privileges`.role_id=#{id})
+  </select>
+  <select id="show" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List"/> from roleinfo
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from roleinfo roleinfo
+    where roleinfo.id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from roleinfo
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="Roleinfo" useGeneratedKeys="true">
+    insert into roleinfo (`name`, beizhu)
+    values (#{name,jdbcType=VARCHAR}, #{beizhu,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="Roleinfo" useGeneratedKeys="true">
+    insert into roleinfo
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="name != null">
+        `name`,
+      </if>
+      <if test="beizhu != null">
+        beizhu,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="beizhu != null">
+        #{beizhu,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="Roleinfo">
+    update roleinfo
+    <set>
+      <if test="name != null">
+        `name` = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="beizhu != null">
+        beizhu = #{beizhu,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="Roleinfo">
+    update roleinfo
+    set `name` = #{name,jdbcType=VARCHAR},
+      beizhu = #{beizhu,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

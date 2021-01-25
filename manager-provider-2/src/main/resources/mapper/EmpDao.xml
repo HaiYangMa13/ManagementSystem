@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.springcloudt1.managerprovider.dao.EmpDao">
+  <resultMap id="BaseResultMap" type="Emp">
+    <id column="emp_id" jdbcType="INTEGER" property="id" />
+    <result column="emp_name" jdbcType="VARCHAR" property="name" />
+    <result column="emp_empno" jdbcType="VARCHAR" property="empno" />
+    <result column="emp_sex" jdbcType="VARCHAR" property="sex" />
+    <result column="emp_sal" jdbcType="INTEGER" property="sal" />
+    <result column="emp_birth" jdbcType="VARCHAR" property="birth" />
+    <result column="emp_pwd" jdbcType="VARCHAR" property="pwd" />
+    <result column="emp_photoName" jdbcType="VARCHAR" property="photoname" />
+    <result column="emp_deptid" jdbcType="INTEGER" property="deptid" />
+    <result column="emp_roleid" jdbcType="INTEGER" property="roleid" />
+    <association property="dept" javaType="Dept" select="loadDept" column="emp_deptid"></association>
+    <association property="roleinfo" javaType="Roleinfo" select="loadRoleinfo" column="emp_roleid"></association>
+  </resultMap>
+  <sql id="Base_Column_List">
+    emp.id as emp_id, emp.`name` as `emp_name`, emp.empno as emp_empno, emp.sex as emp_sex, 
+    emp.sal as emp_sal, emp.birth as emp_birth, emp.pwd as emp_pwd, emp.photoName as emp_photoName, 
+    emp.deptid as emp_deptid, emp.roleid as emp_roleid
+  </sql>
+  <select id="loadRoleinfo" resultType="Roleinfo">
+    select * from Roleinfo where id=#{id}
+  </select>
+  <select id="loadDept" resultType="Dept">
+    select * from dept where id=#{id}
+  </select>
+  <select id="pager" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List"></include>from emp limit #{pageNo},#{pageSize}
+  </select>
+  <select id="show" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List"/> from emp
+  </select>
+  <select id="serch" resultMap="BaseResultMap" parameterType="String">
+    select * from emp where name =#{name}
+  </select>
+  <select id="page" resultMap="BaseResultMap" parameterType="map">
+    select <include refid="Base_Column_List" /> from emp limit #{pageNo},#{pageSize}
+  </select>
+  <select id="countId" resultType="int">
+    select count(id) from emp
+  </select>
+  <select id="search" parameterType="String" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List"></include> from emp where name=#{name}
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from emp emp
+    where emp.id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectEM" resultMap="BaseResultMap" parameterType="map">
+    select <include refid="Base_Column_List"/> from emp where empno=#{name} and pwd=#{pwd}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from emp
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="Emp" useGeneratedKeys="true">
+    insert into emp (`name`, empno, sex, 
+      sal, birth, pwd, photoName, 
+      deptid, roleid)
+    values (#{name,jdbcType=VARCHAR}, #{empno,jdbcType=VARCHAR}, #{sex,jdbcType=VARCHAR}, 
+      #{sal,jdbcType=INTEGER}, #{birth,jdbcType=VARCHAR}, #{pwd,jdbcType=VARCHAR}, #{photoname,jdbcType=VARCHAR}, 
+      #{deptid,jdbcType=INTEGER}, #{roleid,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="Emp" useGeneratedKeys="true">
+    insert into emp
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="name != null">
+        `name`,
+      </if>
+      <if test="empno != null">
+        empno,
+      </if>
+      <if test="sex != null">
+        sex,
+      </if>
+      <if test="sal != null">
+        sal,
+      </if>
+      <if test="birth != null">
+        birth,
+      </if>
+      <if test="pwd != null">
+        pwd,
+      </if>
+      <if test="photoname != null">
+        photoName,
+      </if>
+      <if test="deptid != null">
+        deptid,
+      </if>
+      <if test="roleid != null">
+        roleid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="empno != null">
+        #{empno,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null">
+        #{sex,jdbcType=VARCHAR},
+      </if>
+      <if test="sal != null">
+        #{sal,jdbcType=INTEGER},
+      </if>
+      <if test="birth != null">
+        #{birth,jdbcType=VARCHAR},
+      </if>
+      <if test="pwd != null">
+        #{pwd,jdbcType=VARCHAR},
+      </if>
+      <if test="photoname != null">
+        #{photoname,jdbcType=VARCHAR},
+      </if>
+      <if test="deptid != null">
+        #{deptid,jdbcType=INTEGER},
+      </if>
+      <if test="roleid != null">
+        #{roleid,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="Emp">
+    update emp
+    <set>
+      <if test="name != null">
+        `name` = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="empno != null">
+        empno = #{empno,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null">
+        sex = #{sex,jdbcType=VARCHAR},
+      </if>
+      <if test="sal != null">
+        sal = #{sal,jdbcType=INTEGER},
+      </if>
+      <if test="birth != null">
+        birth = #{birth,jdbcType=VARCHAR},
+      </if>
+      <if test="pwd != null">
+        pwd = #{pwd,jdbcType=VARCHAR},
+      </if>
+      <if test="photoname != null">
+        photoName = #{photoname,jdbcType=VARCHAR},
+      </if>
+      <if test="deptid != null">
+        deptid = #{deptid,jdbcType=INTEGER},
+      </if>
+      <if test="roleid != null">
+        roleid = #{roleid,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="Emp">
+    update emp
+    set `name` = #{name,jdbcType=VARCHAR},
+      empno = #{empno,jdbcType=VARCHAR},
+      sex = #{sex,jdbcType=VARCHAR},
+      sal = #{sal,jdbcType=INTEGER},
+      birth = #{birth,jdbcType=VARCHAR},
+      pwd = #{pwd,jdbcType=VARCHAR},
+      photoName = #{photoname,jdbcType=VARCHAR},
+      deptid = #{deptid,jdbcType=INTEGER},
+      roleid = #{roleid,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

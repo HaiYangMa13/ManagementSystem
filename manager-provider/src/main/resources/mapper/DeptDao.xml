@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.springcloudt1.managerprovider.dao.DeptDao">
+  <resultMap id="BaseResultMap" type="Dept">
+    <id column="dept_id" jdbcType="INTEGER" property="id" />
+    <result column="dept_name" jdbcType="VARCHAR" property="name" />
+    <result column="dept_manager" jdbcType="VARCHAR" property="manager" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    dept.id as dept_id, dept.`name` as `dept_name`, dept.manager as dept_manager
+  </sql>
+
+  <select id="show" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List"/> from dept
+  </select>
+
+  <select id="check" resultMap="BaseResultMap" parameterType="String">
+		select <include refid="Base_Column_List"/> from dept where manager=#{name}
+</select>
+<select id="pager" resultMap="BaseResultMap" parameterType="map">
+  select <include refid="Base_Column_List"/>  from dept limit #{pageNo},#{pageSize}
+</select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from dept dept
+    where dept.id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from dept
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="Dept" useGeneratedKeys="true">
+    insert into dept (`name`, manager)
+    values (#{name,jdbcType=VARCHAR}, #{manager,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="Dept" useGeneratedKeys="true">
+    insert into dept
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="name != null">
+        `name`,
+      </if>
+      <if test="manager != null">
+        manager,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="manager != null">
+        #{manager,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="Dept">
+    update dept
+    <set>
+      <if test="name != null">
+        `name` = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="manager != null">
+        manager = #{manager,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="Dept">
+    update dept
+    set `name` = #{name,jdbcType=VARCHAR},
+      manager = #{manager,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

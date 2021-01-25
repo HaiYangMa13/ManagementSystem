@@ -1,0 +1,14 @@
+server:
+  port: 8890
+eureka:
+  client:
+    service-url:
+      defaultZone: http://server01:7001/eureka,http://server02:7002/eureka
+spring:
+  application:
+    name: manager-zuul
+zuul:
+  routes:
+    api-a:
+      path: /manager/**
+      service-id: manager-consumer
