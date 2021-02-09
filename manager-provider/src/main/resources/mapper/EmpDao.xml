@@ -35,6 +35,11 @@
   <select id="serch" resultMap="BaseResultMap" parameterType="String">
     select * from emp where name = #{name}
   </select>
+
+  <select id="findbyEmpNo" resultType="Emp" parameterType="String">
+    select <include refid="Base_Column_List"></include>from emp where empno = #{name}
+  </select>
+
   <select id="page" resultMap="BaseResultMap" parameterType="map">
     select <include refid="Base_Column_List" /> from emp limit #{pageNo},#{pageSize}
   </select>

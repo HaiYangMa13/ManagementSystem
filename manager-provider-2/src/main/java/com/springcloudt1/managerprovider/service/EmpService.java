@@ -36,7 +36,9 @@ public class EmpService {
         return all;
     }
     public List search(String name){return dao.search(name);}
-
+    public Emp findByEmpNo(String name){
+        return dao.findbyEmpNo(name);
+    }
     public int countId () {
         int record = dao.countId();
         return record;

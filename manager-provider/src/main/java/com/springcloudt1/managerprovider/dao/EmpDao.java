@@ -21,6 +21,8 @@ public interface EmpDao {
 
     List serch(String name);
 
+    Emp findbyEmpNo(String name);
+
     List page(Map map);
 
     int insertSelective(Emp record);

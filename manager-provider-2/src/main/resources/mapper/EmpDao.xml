@@ -44,6 +44,9 @@
   <select id="search" parameterType="String" resultMap="BaseResultMap">
     select <include refid="Base_Column_List"></include> from emp where name=#{name}
   </select>
+  <select id="findbyEmpNo" resultType="Emp" parameterType="String">
+    select <include refid="Base_Column_List"></include>from emp where empno = #{name}
+  </select>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />

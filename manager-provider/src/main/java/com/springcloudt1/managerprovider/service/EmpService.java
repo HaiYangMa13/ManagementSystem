@@ -31,6 +31,10 @@ public class EmpService {
         return deptDao.show();
     }
 
+    public Emp findByEmpNo(String name){
+        return dao.findbyEmpNo(name);
+    }
+
     public List pager (Map map) {
         List all = dao.page(map);
         return all;

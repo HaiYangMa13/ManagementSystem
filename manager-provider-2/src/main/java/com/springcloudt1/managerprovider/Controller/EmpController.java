@@ -2,16 +2,15 @@ package com.springcloudt1.managerprovider.Controller;
 
 
 import com.springcloudt1.managerapi.entity.Emp;
+import com.springcloudt1.managerprovider.utils.RedisUtils;
 import com.springcloudt1.managerprovider.service.EmpService;
 import com.springcloudt1.managerprovider.service.PermissionService;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,32 +18,56 @@ import java.util.Map;
 @RestController
 @RequestMapping("/emp")
 public class EmpController {
+    private String user_id="emp:id:";
     @Resource
     EmpService empService;
     @Resource
     PermissionService permissionService;
+    @Resource
+    RedisUtils redisUtils;
 
     @RequestMapping(value = "/add")
     public void add(@RequestBody Emp data){
         data.setPwd("111111");
         empService.add(data);
+        System.out.println(data.getId());
+        if (!redisUtils.hasKey(user_id + data.getId())) {
+            redisUtils.set(user_id + data.getId(), data, 3600);
+        }
     }
     @RequestMapping(value = "/del")
     public void del(int id){
+        if(redisUtils.hasKey(user_id+id)){
+            redisUtils.del(user_id+id);
+        }
         empService.del(id);
     }
 
     @RequestMapping(value = "/loadRole")
     public List loadRole(){
-        List roles = permissionService.initRoles();
+        List roles;
+        if(redisUtils.hasKey("roles")){
+         roles =(List)redisUtils.get("roles");
+        }else{
+            roles = permissionService.initRoles();
+            redisUtils.set("roles",roles,800);
+        }
+
         return roles;
     }
     @RequestMapping(value = "/loadDept")
     public List loadDept(){
-       List depts =  empService.loadDept();
+        List depts;
+        if(redisUtils.hasKey("depts")){
+                    depts=(List) redisUtils.get("depts");
+                }else{
+            depts =  empService.loadDept();
+            redisUtils.set("depts",depts,800);
+        }
+
        return depts;
     }
-    @RequestMapping(value = "/{id}/load")
+/*    @RequestMapping(value = "/{id}/load")
     public String load(@PathVariable int id,ModelMap modelMap){
        List depts =  empService.loadDept();
        modelMap.addAttribute("depts",depts);
@@ -52,16 +75,17 @@ public class EmpController {
        modelMap.addAttribute("record",record);
        return "emp/modify";
     }
-    @RequestMapping(value = "/update",method =RequestMethod.POST)
+    */
+
+    @RequestMapping(value = "/update",method = RequestMethod.POST)
     public void update(@RequestBody Emp data ){
+        redisUtils.set(user_id + data.getId(), data, 3600);
         empService.update(data);
     }
 
     @RequestMapping("/search")
     public List search(String name){
         List data =  empService.search(name);
-        System.out.println(name);
-        System.out.println(data);
         return data;
     }
     @RequestMapping("/pager")
@@ -74,8 +98,10 @@ public class EmpController {
 
     @RequestMapping("/delAll")
     public void delAll(@RequestBody int[] records){
-        System.out.println(records[0]);
        for(int id : records){
+           if(redisUtils.hasKey(user_id+id)){
+               redisUtils.del(user_id+id);
+           }
            empService.del(id);
        }
     }
@@ -89,9 +115,8 @@ public class EmpController {
     @RequestMapping("/show")
     public List show(){
     /*    PageHelper.startPage(pn,5);*/
-        System.out.println(2);
         List all = empService.show();
-        return all;
+        throw new RuntimeException();
        /* PageInfo page = new PageInfo(all);
         modelMap.addAttribute("page",page);*/
         /* Pagination pager = new Pagination();

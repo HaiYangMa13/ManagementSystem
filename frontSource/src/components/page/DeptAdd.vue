@@ -19,7 +19,7 @@
 					</el-form-item>
                     <el-form-item>
                         <el-button type="primary" @click="onSubmit">添加</el-button>
-                        <el-button>取消</el-button>
+                        <el-button @click="backhome">取消</el-button>
                     </el-form-item>
                 </el-form>
             </div>
@@ -39,6 +39,10 @@ export default {
         };
     },
     methods: {
+		backhome(){
+			this.$router.push("/dept");
+		},
+		
 		verify(){
 			alert("hello");
 		},

@@ -107,6 +107,11 @@
 		                <el-option :label="dept.name" :value="dept.id" v-for="dept in depts"></el-option>
 		            </el-select>
 		        </el-form-item>
+				<el-form-item label="职位" v-show="roleshow">
+				       <el-select v-model="form.roleid" placeholder="请选择">
+				           <el-option :label="role.name" :value="role.id" v-for="role in roles"></el-option>
+				       </el-select>
+				   </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="editVisible = false">取 消</el-button>
@@ -128,8 +133,10 @@ export default {
                 pageSize: 5
             },
 			depts:[],
+			roles:[],
 			records:[],
 			show:true,
+			roleshow:false,
             tableData: [],
             multipleSelection: [],
             delList: [],
@@ -141,7 +148,9 @@ export default {
         };
     },
     created() {
-        this.getData();
+		if(this.getData()==null){
+			this.getData();
+		}  
     },
     methods: {
         // 获取 easy-mock 的模拟数据
@@ -149,12 +158,6 @@ export default {
 			if(localStorage.getItem("user")==="员工"){
 				this.show=false;
 			}
-			this.$http({
-				method:'Get',
-				url:'http://localhost:8890/manager/emp/loadDept'
-			}).then(function(res){
-				this.depts=res.body;
-			});
 			this.$http({
 				method:'Get',
 				url:'http://localhost:8890/manager/emp/count'
@@ -221,9 +224,31 @@ export default {
         },
         // 编辑操作
         handleEdit(index, row) {
+			if(localStorage.getItem("role")=="管理员"){
+				this.roleshow=true;
+					this.$http.get(
+						"http://localhost:8890/manager/emp/loadRole"
+					).then(function(res){
+						this.roles=res.body;
+					});
+					this.$http({
+						method:'Get',
+						url:'http://localhost:8890/manager/emp/loadDept'
+					}).then(function(res){
+						this.depts=res.body;
+					});
+			}else{
+			this.$http({
+				method:'Get',
+				url:'http://localhost:8890/manager/emp/loadDept'
+			}).then(function(res){
+				this.depts=res.body;
+			});	
+			}
             this.idx = index;
             this.form = row;
             this.editVisible = true;
+			
         },
         // 保存编辑
         saveEdit() {

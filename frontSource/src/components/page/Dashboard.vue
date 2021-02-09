@@ -29,7 +29,7 @@
                                 <i class="el-icon-lx-people grid-con-icon"></i>
                                 <div class="grid-cont-right">
                                     <div class="grid-num">方便</div>
-                                    <div>用户访问</div>
+                                    <div>管理员工</div>
                                 </div>
                             </div>
                         </el-card>
@@ -111,7 +111,7 @@ export default {
 			role: localStorage.getItem('role'),
             todoList: [
                 {
-                    title: '欢迎使用体育场馆运营管理系统',
+                    title: '欢迎使用员工部门管理系统',
                     status: false
                 },
                 {
@@ -131,7 +131,7 @@ export default {
                     status: false
                 },
                 {
-                    title: '联系电话：****-88******038',
+                    title: '联系电话：18827545204',
                     status: false
                 }
             ],

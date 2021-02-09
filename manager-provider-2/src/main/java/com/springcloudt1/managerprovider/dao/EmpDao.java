@@ -13,6 +13,8 @@ public interface EmpDao {
 
     int countId ();
 
+    Emp findbyEmpNo(String name);
+
     List search (String name);
 
     Emp selectEM (Map map);

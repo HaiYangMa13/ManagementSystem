@@ -3,6 +3,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <packaging>pom</packaging>
+
     <modules>
         <module>manager-eureka</module>
         <module>manager-api</module>
@@ -10,7 +11,6 @@
         <module>manager-provider</module>
         <module>manager-eureka-2</module>
         <module>manager-provider-2</module>
-        <module>manager-zool</module>
         <module>manager-zuul</module>
     </modules>
     <groupId>com.SpringCloudT1</groupId>

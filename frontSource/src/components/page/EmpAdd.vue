@@ -46,14 +46,14 @@
 				       </el-select>
 				   </el-form-item>
 					
-					<el-form-item label="权限" placeholder="请选择">
+					<el-form-item label="职位" placeholder="请选择">
 					   <el-select v-model="form.roleid">
 						   <el-option :label="role.name" :value="role.id" v-for="role in roles"></el-option>
 					   </el-select>
 					</el-form-item>
                     <el-form-item>
                         <el-button type="primary" @click="onSubmit">添加</el-button>
-                        <el-button>取消</el-button>
+                        <el-button @click="backhome">取消</el-button>
                     </el-form-item>
                 </el-form>
             </div>
@@ -78,6 +78,9 @@ export default {
 	},
 	
     methods: {
+		backhome(){
+			this.$router.push({path:"/emp"})
+		},
 		getDept(){
 			this.$http.get(
 			"http://localhost:8890/manager/emp/loadDept"

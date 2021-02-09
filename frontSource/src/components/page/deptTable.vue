@@ -101,7 +101,7 @@ export default {
         };
     },
     created() {
-        this.getData();
+		 this.getData();	
     },
     methods: {
         // 获取 easy-mock 的模拟数据
