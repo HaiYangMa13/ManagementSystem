@@ -11,13 +11,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.List;
 
 @Component
-@FeignClient(name = "manager-provider",fallbackFactory = fallbackFactory.class)
-public interface EmpService {
+@FeignClient(name = "manager-selectProvider")
+public interface SelectEmpService {
     @RequestMapping(value = "/emp/pager")
     List pager (@RequestParam("pageNo") int pageNo, @RequestParam("pageSize") int pageSize);
-
-    @RequestMapping(value = "/emp/del")
-    void del (@RequestParam("id") int id);
 
     @RequestMapping(value = "/emp/loadRole")
     List loadRole ();
@@ -25,20 +22,8 @@ public interface EmpService {
     @RequestMapping(value = "/emp/loadDept")
     List loadDept();
     
-    @RequestMapping(value = "/emp/show")
-    List show();
-
     @RequestMapping(value = "/emp/count")
     List count();
-
-    @RequestMapping(value = "/emp/add")
-    List add(@RequestBody Emp data);
-
-    @RequestMapping(value = "/emp/update")
-    List update(@RequestBody Emp data);
-
-    @RequestMapping(value = "/emp/delAll")
-    void delAll(@RequestBody int[] id);
 
     @RequestMapping(value = "/emp/search")
     List search(@RequestParam("name") String name);

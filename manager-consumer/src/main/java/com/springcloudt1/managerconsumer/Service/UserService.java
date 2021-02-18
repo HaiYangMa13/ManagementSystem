@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Component
-@FeignClient(name = "manager-provider")
+@FeignClient(name = "manager-selectProvider")
 public interface UserService {
     @RequestMapping(value = "/user/login")
     Object login(@RequestParam("name") String name, @RequestParam("pwd") String pwd, @RequestParam("role") String role);
